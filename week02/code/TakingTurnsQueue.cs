@@ -40,12 +40,26 @@ public class TakingTurnsQueue
         else
         {
             Person person = _people.Dequeue();
-            if (person.Turns > 1)
+
+            // If the person has more than 1 turn left, then they go back to the end of the queue.
+            // If they have 0 or less turns, then they stay in the queue forever.
+            // If they have 1 turn left, then they are not added back to the queue.
+            // Note that a turns value of 0 or less means the person has an infinite number of turns.
+
+
+            if (person.Turns <= 0 || person.Turns > 1)
             {
-                person.Turns -= 1;
+                
+                //the logic here is that if the person has 0 or less turns, they stay in the queue forever.
+                //If they have more than 1 turn, they are added back to the queue with their turns decremented by 1.
+                //If they have exactly 1 turn, they are not added back to the queue.
+
+                if (person.Turns > 1)
+                {
+                    person.Turns--;
+                }
                 _people.Enqueue(person);
             }
-
             return person;
         }
     }

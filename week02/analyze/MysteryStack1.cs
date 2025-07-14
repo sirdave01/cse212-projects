@@ -4,7 +4,7 @@
         foreach (var letter in text)
             stack.Push(letter);
 
-        var result = "";
+        var result = " ";
         while (stack.Count > 0)
             result += stack.Pop();
 
