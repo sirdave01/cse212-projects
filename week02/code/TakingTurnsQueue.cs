@@ -9,9 +9,9 @@
 /// </summary>
 public class TakingTurnsQueue
 {
-    private readonly PersonQueue _people = new();
+    private readonly Queue<Person> _people = new();
 
-    public int Length => _people.Length;
+    public int Length => _people.Count;
 
     /// <summary>
     /// Add new people to the queue with a name and number of turns
@@ -20,6 +20,11 @@ public class TakingTurnsQueue
     /// <param name="turns">Number of turns remaining</param>
     public void AddPerson(string name, int turns)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new InvalidOperationException("Name cannot be null or empty.");
+        }
+
         var person = new Person(name, turns);
         _people.Enqueue(person);
     }
@@ -33,39 +38,42 @@ public class TakingTurnsQueue
     /// </summary>
     public Person GetNextPerson()
     {
-        if (_people.IsEmpty())
+        if (_people.Count == 0)
         {
             throw new InvalidOperationException("No one in the queue.");
         }
-        else
+
+        // dequeue the next person in the queue
+
+        Person person = _people.Dequeue();
+        if (person.Turns <= 0)
         {
-            Person person = _people.Dequeue();
+            // reenqueue with the same turns infinitely
 
-            // If the person has more than 1 turn left, then they go back to the end of the queue.
-            // If they have 0 or less turns, then they stay in the queue forever.
-            // If they have 1 turn left, then they are not added back to the queue.
-            // Note that a turns value of 0 or less means the person has an infinite number of turns.
-
-
-            if (person.Turns <= 0 || person.Turns > 1)
-            {
-                
-                //the logic here is that if the person has 0 or less turns, they stay in the queue forever.
-                //If they have more than 1 turn, they are added back to the queue with their turns decremented by 1.
-                //If they have exactly 1 turn, they are not added back to the queue.
-
-                if (person.Turns > 1)
-                {
-                    person.Turns--;
-                }
-                _people.Enqueue(person);
-            }
-            return person;
+            _people.Enqueue(new Person(person.Name, person.Turns));
         }
+
+        // handle finite turns
+
+        else if (person.Turns > 1)
+        {
+            // reenqueue with one less turn
+
+            _people.Enqueue(new Person(person.Name, person.Turns - 1));
+        }
+
+        // else person has 1 turn left, so they will not be re-enqueued
+        // and will not be returned to the queue again, they will just be returned
+        // as the next person in the queue.
+
+        // return the person in their indexing
+
+        return person;
     }
+
 
     public override string ToString()
     {
-        return _people.ToString();
+        return string.Join(", ", _people);
     }
 }
