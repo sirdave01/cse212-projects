@@ -25,6 +25,36 @@
     private static int CountDuplicates(int[] data)
     {
         // Add code here.
-        return 0;
+
+        // counting the duplicates in the Sparse array (set)
+
+        var uniqueItems = new HashSet<int>();
+        var duplicateCount = 0;
+
+        //run a loop through the data
+
+        foreach (var item in data)
+        {
+
+            if (!uniqueItems.Add(item))
+            {
+                // if the item is already in the set, it is a duplicate
+                duplicateCount++;
+            }
+
+
+        }
+        // return the count of duplicates
+        return duplicateCount;
+        // return 0;
+    }
+
+    // Alternate method to count duplicates
+    private static int CountDuplicatesAlternate(int[] data)
+    {
+        // Create a HashSet from the data to filter out unique items
+        var uniqueItems = new HashSet<int>(data);
+        // Return the difference between the original array length and the unique items count
+        return data.Length - uniqueItems.Count;
     }
 }
