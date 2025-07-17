@@ -25,6 +25,10 @@ public class Translator
     public void AddWord(string fromWord, string toWord)
     {
         // ADD YOUR CODE HERE
+
+        // this method should allow users to add a translation
+        // from one word to another in the dictionary.
+        _words[fromWord] = toWord; // This will add or update the translation in the dictionary.
     }
 
     /// <summary>
@@ -35,6 +39,18 @@ public class Translator
     public string Translate(string fromWord)
     {
         // ADD YOUR CODE HERE
-        return "";
+
+        // this method should check and return the translation of the word
+        // if the word is not in the dictionary, it should return "???"
+
+        string newWord = "???";
+
+        if (_words.ContainsKey(fromWord))
+        {
+            newWord = _words[fromWord]; // If the word exists, return its translation.
+        }
+        return newWord; // Return the translated word or "???" if not found.
+
+
     }
 }
